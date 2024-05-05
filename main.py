@@ -1,39 +1,59 @@
 import logging
+
 from flask import Flask, g
 
-from application.adapters.controllers.report_controller import report_blueprint
-from application.domain.services.commitment_service import CommitmentService
-from application.domain.services.report_service import ReportService
+from app.adapters.controllers.loan_controller import loan_blueprint
+from app.adapters.controllers.pension_controller import pension_blueprint
+from app.adapters.controllers.portfolio_controller import portfolio_blueprint
+from app.adapters.controllers.rent_controller import rent_blueprint
+from app.domain.services.loan.loan_forecast_service import LoanForecastService
+from app.domain.services.loan.loan_service import LoanService
+from app.domain.services.pension.pension_forecast_service import PensionForecastService
+from app.domain.services.pension.pension_service import PensionService
+from app.domain.services.portfolio.portfolio_document_service import PortfolioForecastService
+from app.domain.services.portfolio.portfolio_service import PortfolioService
+from app.domain.services.rent.rent_forecast_service import RentForecastService
+from app.domain.services.rent.rent_service import RentService
 
 
 def create_app():
-    # Create a new Flask application instance.
     app = Flask(__name__)
 
-    # Register the report blueprint to the application.
-    app.register_blueprint(report_blueprint)
+    app.register_blueprint(loan_blueprint)
+    app.register_blueprint(rent_blueprint)
+    app.register_blueprint(portfolio_blueprint)
+    app.register_blueprint(pension_blueprint)
 
-    # Set the logging level of the application to WARNING.
     app.logger.setLevel(logging.WARNING)
 
-    # Register services with the Flask application context.
     @app.before_request
     def before_request():
-        # Check if the 'commitment_service' is not already registered in the application context.
-        if 'commitment_service' not in g:
-            g.commitment_service = CommitmentService()
+        if 'pension_service' not in g:
+            g.pension_service = PensionService()
 
-        # Check if the 'report_service' is not already registered in the application context.
-        if 'report_service' not in g:
-            g.report_service = ReportService(g.commitment_service)
+        if 'pension_forecast_service' not in g:
+            g.pension_forecast_service = PensionForecastService(g.pension_service)
+
+        if 'rent_service' not in g:
+            g.rent_service = RentService()
+
+        if 'rent_forecast_service' not in g:
+            g.rent_forecast_service = RentForecastService(g.rent_service)
+
+        if 'loan_service' not in g:
+            g.loan_service = LoanService()
+
+        if 'loan_forecast_service' not in g:
+            g.loan_forecast_service = LoanForecastService(g.loan_service)
+
+        if 'portfolio_service' not in g:
+            g.portfolio_service = PortfolioService()
+
+        if 'portfolio_forecast_service' not in g:
+            g.portfolio_forecast_service = PortfolioForecastService(g.portfolio_service)
 
     return app
 
 
-# Entry point of the application.
 if __name__ == '__main__':
-    # Create the Flask application instance using the create_app() function.
-    app: Flask = create_app()
-
-    # Run the application on port 5000 with debugging enabled.
-    app.run(port=5000, debug=True)
+    create_app().run(port=5000, debug=True)

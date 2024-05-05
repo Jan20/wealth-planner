@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Commitment:
+class PensionContribution:
     year: int
     contribution: float
     fees: float
