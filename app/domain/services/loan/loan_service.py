@@ -26,17 +26,13 @@ class LoanService(LoanUseCase):
         date_range: DatetimeIndex = pd.date_range(
             start=loan_request.start_date,
             end=loan_request.end_date,
-            freq='M'
+            freq='ME'
         )
 
-        principal = loan_request.principal
-        annual_interest_rate = loan_request.annual_interest_rate
-
-        # Convert annual interest rate to monthly interest rate
-        monthly_interest_rate = annual_interest_rate / 12
+        monthly_interest_rate = loan_request.annual_interest_rate / 12
 
         # Calculate the monthly payment using the annuity formula
-        monthly_payment = principal * monthly_interest_rate / (1 - (1 + monthly_interest_rate) ** -len(date_range))
+        monthly_payment = loan_request.principal * monthly_interest_rate / (1 - (1 + monthly_interest_rate) ** -len(date_range))
 
         # Initialize lists to store data
         payment_list = []
@@ -45,7 +41,7 @@ class LoanService(LoanUseCase):
         remaining_balance_list = []
 
         # Initialize remaining balance
-        remaining_balance = principal
+        remaining_balance = loan_request.principal
 
         # Generate loan schedule
         for i in range(len(date_range)):

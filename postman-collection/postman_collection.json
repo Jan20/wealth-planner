@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "bada8a6a-b6f8-43e7-aba5-3a5b306a0c41",
+		"name": "Wealth Planner",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4055845"
+	},
+	"item": [
+		{
+			"name": "Create Rent Forecast",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"uuid": "bd5f5ba8-8905-4306-867f-fc1faa2fd5d6",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"monthly_rent\": 700,\n    \"annual_increase\": 0.0,\n    \"start_date\": \"2024.01.01\",\n    \"end_date\": \"2033.12.31\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/rent/forecast",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"rent",
+						"forecast"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Loan Forecast",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"uuid": "ccadc398-1f5f-40b0-99e2-cefb8ebfbf59",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"principal\": 300000,\n    \"annual_interest_rate\": 0.04,\n    \"start_date\": \"2024.01.01\",\n    \"end_date\": \"2044.12.31\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/loan/forecast",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"loan",
+						"forecast"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Portolio Forecast",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"uuid": "2c8c43a5-78f1-4793-801b-1e7a599c717e",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"initial_portfolio\": 250000,\n    \"yearly_return\": 0.07,\n    \"yearly_contribution\": 48000,\n    \"start_date\": \"2024.01.01\",\n    \"end_date\": \"2033.12.31\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/portfolio/document",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"portfolio",
+						"document"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Pension Forecast",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"uuid": "6dfaa284-d471-4fa6-983f-5ef096c3d1db",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"monthly_contribution\": 150.0,\n    \"yearly_interest_rate\": 0.03,\n    \"num_years\": 35,\n    \"annual_growth_rate\": 1.06,\n    \"fee_rate\": 0.0097,\n    \"tax_deductible_rate\": 0.20,\n    \"base_year\": 2024,\n    \"sum_year\": 2060\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/portfolio/document",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"portfolio",
+						"document"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

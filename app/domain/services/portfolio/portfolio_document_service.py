@@ -4,18 +4,16 @@ import os
 from os.path import exists
 
 from matplotlib.figure import Figure
-from pandas import DataFrame
-from reportlab.lib import colors
+from pandas import DataFrame, concat
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, Spacer
 from reportlab.platypus import Table
 
+from app.domain.entities.constants import DEFAULT_STYLE
 from app.domain.entities.portfolio_request import PortfolioRequest
 from app.use_cases.portfolio.portfolio_forecast_use_case import PortfolioForecastUseCase
 from app.use_cases.portfolio.portfolio_use_case import PortfolioUseCase
-
-locale.setlocale(locale.LC_ALL, 'de_DE')
 
 
 class PortfolioForecastService(PortfolioForecastUseCase):
@@ -59,27 +57,20 @@ class PortfolioForecastService(PortfolioForecastUseCase):
         return Image(buffer, width=440, height=300)
 
     @staticmethod
-    def generate_table(df: DataFrame) -> Table:
+    def generate_table(dataframe: DataFrame) -> Table:
+        df = concat([dataframe.copy(), DataFrame({
+            'Year': 'SUM',
+            'Portfolio': dataframe["Portfolio"].iloc[-1] + dataframe["Growth"].iloc[-1] + dataframe["Contribution"].iloc[-1],
+            'Growth': dataframe["Growth"].sum(),
+            'Contribution': [dataframe["Contribution"].sum()],
+        })], ignore_index=True)
 
-        updated_df = df.copy()
-        updated_df["Portfolio"] = updated_df["Portfolio"].map(lambda x: locale.currency(x, symbol=True, grouping=True, international=True))
+        for column in ["Portfolio", "Growth", "Contribution"]:
+            df[column] = df[column].map(lambda x: locale.currency(x, symbol=True, grouping=True, international=True))
 
-        # Convert DataFrame to list of lists for table data
-        data = [updated_df.columns.tolist()] + updated_df.values.tolist()
-
-        # Create Table object
-        return Table(data, colWidths=113, style=[
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 6),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),
-            ('BOTTOMMARGIN', (0, 0), (-1, -1), 10, colors.black)
-        ])
+        return Table([df.columns.tolist()] + df.values.tolist(), colWidths=113, style=DEFAULT_STYLE)
 
     @staticmethod
     def delete_document(file_path: str):
-        # Check if the file exists before attempting to delete it
         if exists(file_path):
             os.remove(file_path)

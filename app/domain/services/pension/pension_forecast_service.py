@@ -12,12 +12,8 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, Spacer
 from reportlab.platypus import Table
 
 from app.domain.entities.pension_request import PensionRequest
-from app.domain.entities.portfolio_request import PortfolioRequest
 from app.use_cases.pension.pension_forecast_use_case import PensionForecastUseCase
 from app.use_cases.pension.pension_use_case import PensionUseCase
-from app.use_cases.portfolio.portfolio_use_case import PortfolioUseCase
-
-locale.setlocale(locale.LC_ALL, 'de_DE')
 
 
 class PensionForecastService(PensionForecastUseCase):
@@ -65,10 +61,10 @@ class PensionForecastService(PensionForecastUseCase):
 
     @staticmethod
     def generate_table(df: DataFrame) -> Table:
-
         updated_df = df.copy()
 
-        updated_df["Portfolio"] = updated_df["Portfolio"].map(lambda x: locale.currency(x, symbol=True, grouping=True, international=True))
+        updated_df["Portfolio"] = updated_df["Portfolio"].map(
+            lambda x: locale.currency(x, symbol=True, grouping=True, international=True))
 
         # Convert DataFrame to list of lists for table data
         data = [updated_df.columns.tolist()] + updated_df.values.tolist()

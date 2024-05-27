@@ -15,8 +15,6 @@ from app.domain.entities.loan_request import LoanRequest
 from app.use_cases.loan.loan_forecast_use_case import LoanForecastUseCase
 from app.use_cases.loan.loan_use_case import LoanUseCase
 
-locale.setlocale(locale.LC_ALL, 'de_DE')
-
 
 class LoanForecastService(LoanForecastUseCase):
     def __init__(self, loan_use_cast: LoanUseCase):

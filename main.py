@@ -1,3 +1,4 @@
+import locale
 import logging
 
 from flask import Flask, g
@@ -15,16 +16,16 @@ from app.domain.services.portfolio.portfolio_service import PortfolioService
 from app.domain.services.rent.rent_forecast_service import RentForecastService
 from app.domain.services.rent.rent_service import RentService
 
+locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
+locale.setlocale(locale.LC_MONETARY, 'de_DE.UTF-8')
+
 
 def create_app():
-    app = Flask(__name__)
 
-    app.register_blueprint(loan_blueprint)
-    app.register_blueprint(rent_blueprint)
-    app.register_blueprint(portfolio_blueprint)
-    app.register_blueprint(pension_blueprint)
-
+    app: Flask = Flask(__name__)
     app.logger.setLevel(logging.WARNING)
+
+    app = register_blueprints(app)
 
     @app.before_request
     def before_request():
@@ -55,5 +56,19 @@ def create_app():
     return app
 
 
+def register_blueprints(app: Flask) -> Flask:
+    blueprints = [
+        loan_blueprint,
+        rent_blueprint,
+        portfolio_blueprint,
+        pension_blueprint
+    ]
+
+    for blueprint in blueprints:
+        app.register_blueprint(blueprint)
+
+    return app
+
+
 if __name__ == '__main__':
-    create_app().run(port=5000, debug=True)
+    create_app().run(host='0.0.0.0', port=5000)

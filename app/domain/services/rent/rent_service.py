@@ -6,8 +6,6 @@ from pandas import DatetimeIndex, DataFrame
 from app.domain.entities.rent_request import RentRequest
 from app.use_cases.rent.rent_use_case import RentUseCase
 
-locale.setlocale(locale.LC_ALL, 'de_DE')
-
 
 class RentService(RentUseCase):
 
@@ -25,14 +23,12 @@ class RentService(RentUseCase):
         date_range: DatetimeIndex = pd.date_range(
             start=rent_request.start_date,
             end=rent_request.end_date,
-            freq='M'
+            freq='ME'
         )
 
-        # Calculate monthly rent payments
         monthly_rents = [rent_request.monthly_rent * ((1 + rent_request.annual_increase / 100) ** i) for i in
                          range(len(date_range))]
 
-        # Create DataFrame from calculated data
         df: DataFrame = DataFrame(
             {
                 'Date': date_range,
@@ -41,9 +37,10 @@ class RentService(RentUseCase):
         )
         df.set_index('Date', inplace=True)
 
-        df = df.resample('Y').sum()
+        df = df.resample('YE').sum()
         df['Sum'] = df['Monthly Rent'].cumsum()
         df['Year'] = df.index.year
+
         df["Monthly Rent"] = df["Monthly Rent"].map(lambda x: locale.currency(x, symbol=True, grouping=True, international=True))
         df["Sum"] = df["Sum"].map(lambda x: locale.currency(x, symbol=True,  grouping=True, international=True))
 

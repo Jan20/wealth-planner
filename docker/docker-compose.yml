@@ -1,0 +1,8 @@
+version: "3.9"
+
+services:
+  wealth-panner:
+    container_name: Wealth-Planner
+    image: wealth-planner
+    ports:
+      - "6000:5000"
